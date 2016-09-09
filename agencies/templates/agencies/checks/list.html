@@ -1,0 +1,151 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Check{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>    
+    <li>Check</li>
+    <li class="active">Search</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Check
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Search
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+    
+    <div class="col-xs-12">
+
+        <div class="well">
+            <form action="{{ request.get_full_path }}" method="get" class="form-inline" role="form">{% csrf_token %}
+                Bill Date: {{ filter_form.weekends }} &nbsp;
+                Employee First Name: {{ filter_form.employee_first_name }} &nbsp;
+                Employee Last Name: {{ filter_form.employee_last_name }} &nbsp;
+                Customer Name: {{ filter_form.customer_name }} &nbsp;
+                <button type="submit" class="btn btn-purple btn-sm">
+                    Search
+                    <i class="icon-search icon-on-right bigger-110"></i>
+                </button>
+                <a href="{% url "agencies_checks_list" %}" class="btn btn-default btn-sm">
+                    Clear
+                    <i class="icon-remove icon-on-right bigger-110"></i>
+                </a>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>                   
+                    <th>Check ID</th>
+                    <th>Employee</th>                   
+                    <th>Customer</th>
+                    <th>Order</th> 
+                    <th>Time Entry</th>                  
+                    <th>Bill Date</th>
+                    <th>Check Date</th>
+                    <th>Gross</th>
+                    <th>Tax</th>
+                    <th>Net</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for check in checks %}
+                    <tr class="selected">                       
+                        <td>{{ check.id }}</td>
+                        <td><a href="{% url "agencies_temps_show" check.timeentry.assignment.employee.user.id %}">{{ check.timeentry.assignment.employee }} (#{{ check.timeentry.assignment.employee.user.id }})</a></td>
+                        <td><a href="{% url "agencies_customers_update" check.timeentry.assignment.order.customerdepartment.customer.id %}">{{ check.timeentry.assignment.order.customerdepartment.customer.customername }} (#{{ check.timeentry.assignment.order.customerdepartment.customer.id }})</a></td>
+                        <td><a href="{% url "agencies_orders_update" check.timeentry.assignment.order.id %}">#{{ check.timeentry.assignment.order.id }}</a></td>
+                        <td><a href="{% url "agencies_timeentries_detail" check.timeentry.id %}">#{{ check.timeentry.id }}</a></td>
+                        <td>{{ check.timeentry.we_bill }}</td>
+                        <td>{{ check.checkdate }}</td>
+                        <td>$ {{ check.gross }}</td>
+                        <td>$ {{ check.tax }}</td>
+                        <td>$ {{ check.net }}</td>
+                        <td>
+                            <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+                                <a href="{% url "agencies_checks_detail" check.id %}" class="btn btn-xs btn-success">
+                                    Detail
+                                </a>                                   
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="12">
+                            <div class="text-center"><h5>Your search yielded no results.</h5></div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if checks %}
+                <ul class="pager">
+                    {% if checks.has_previous %}
+                        <li class="previous">
+                            <a href="{{ query_string }}page={{ checks.previous_page_number }}">← Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="">
+                        <a>Page {{ checks.number }} of {{ checks.paginator.num_pages }}</a>
+                    </li>
+
+                    {% if checks.has_next %}
+                        <li class="next">
+                            <a href="{{ query_string }}page={{ checks.next_page_number }}">Next →</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /span -->
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("a[id^='big-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var check_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this check?", function (result) {
+                    if (result) {
+                        window.location = '/employers/checks/delete/' + check_id
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

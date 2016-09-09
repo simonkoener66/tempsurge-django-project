@@ -1,0 +1,223 @@
+{% extends "employers/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Update Assignment{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Assignments</li>
+    <li class="active">Update</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "employers_orders_detail" order.id %}">Order #{{ order.id }}</a>
+    	
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Update Assignment
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if assignment_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-assignment">
+                                <i class="green icon-edit bigger-125"></i>
+                                Assignment Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-financial">
+                                <i class="green icon-edit bigger-125"></i>
+                                Financial Details
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-job">
+                                <i class="green icon-edit bigger-125"></i>
+                                Job Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-other">
+                                <i class="green icon-edit bigger-125"></i>
+                                Other Information
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Assignment Information #}
+
+                        <div id="edit-assignment" class="tab-pane active">
+                            <h4 class="header blue bolder smaller">Assignment Information</h4>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Employee</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.employee }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Employee ID</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.employee.id }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Customer</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.order.customerdepartment.customer }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Department</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.order.customerdepartment }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Order ID</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.order.id }}</span>
+                                </div>
+                            </div>
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Assignment ID</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ assignment.id }}</span>
+                                </div>
+                            </div>
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.temp_phone %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.status %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.customer_nda %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.employee_nda %}
+                        </div>
+
+                        {# Financial Information #}
+
+                        <div id="edit-financial" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Financial Details</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.multiplier %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.ot_factor %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.bill_rate %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.pay_rate %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.salary_bill %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.salary %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.units_bill %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.units_pay_rate %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.other_agency_pay %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.overtime_bill %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.overtime_pay %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.doubletime_bill %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.doubletime_pay %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.payroll_notes %}
+                            
+                        </div>
+
+                        {# Job Information #}
+
+                        <div id="edit-job" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Job Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.job_title %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.business_code %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.expected_start_date %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.expected_end_date %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.original_start_date %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.original_end_date %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.shift %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.start_time %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.end_time %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.shift_notes %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_sunday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_monday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_tuesday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_wednesday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_thursday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_friday %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.workday_saturday %}
+                            
+                        </div>
+
+                        {# Other Information #}
+
+                        <div id="edit-other" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Other Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.rep%}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.entered_by %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.referred_by %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.branch %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.do_not_auto_close %}
+                            {% include "tempsurge/forms/field.html" with field=assignment_form.perf_notes %}
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        
+    </script>
+{% endblock %}

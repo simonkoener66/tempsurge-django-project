@@ -1,0 +1,51 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+{% load crispy_forms_tags %}
+{% load mptt_tags %}
+
+{% block title %}Tempsurge - Interest Codes{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Administration</li>
+    <li>Interest Codes</li>
+    <li class="active">{% if not identifier %}Add{% else %}Update{% endif %}</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Administration
+        <small>
+            <i class="icon-double-angle-right"></i>
+            {% if not identifier %}Add{% else %}Update{% endif %} Interest Codes
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user_form.errors or profile_form.errors %}
+                {% include "tempsurge/components/alert.html" with connotation="danger" message="Please check the errors below." %}
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                {% crispy form %}
+                {% crispy interest_code_synonym_formset interest_code_helper %}
+
+                {% comment %}
+                {{ form.as_p }}
+                {{ interest_code_synonym_formset.as_p }}
+                {% endcomment %}
+
+                {% include "tempsurge/forms/submit.html" %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

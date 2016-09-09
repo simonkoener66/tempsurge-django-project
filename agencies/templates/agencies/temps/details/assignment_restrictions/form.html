@@ -1,0 +1,52 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - {% if not identifier %}Create{% else %}Update{% endif %} Employee Assignment Restrictions{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li>Assignment Restrictions</li>
+    <li class="active">{% if not identifier %}Create{% else %}Update{% endif %}</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <li class="icon-double-angle-right"></li>
+            {{ user.first_name }} {{ user.last_name }}
+            <i class="icon-double-angle-right"></i>
+            Assignment Restrictions
+            <i class="icon-double-angle-right"></i>
+            {% if not identifier %}Create{% else %}Update{% endif %}
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if form.errors %}
+                {% include "tempsurge/forms/errors.html" %}
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                {% include "tempsurge/forms/field.html" with field=form.branch %}
+                {% include "tempsurge/forms/field.html" with field=form.description %}
+                {% include "tempsurge/forms/field.html" with field=form.all_departments %}
+                {% include "tempsurge/forms/field.html" with field=form.customer_dna_employee %}
+                {% include "tempsurge/forms/field.html" with field=form.employee_dna_customer %}
+                {# {% include "tempsurge/forms/field.html" with field=form.temp %} #}
+                {% include "tempsurge/forms/submit.html" %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

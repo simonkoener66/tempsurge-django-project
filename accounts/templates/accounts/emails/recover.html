@@ -1,0 +1,24 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+</head>
+<body>
+
+<p style="margin-bottom: 1em;">{% trans "Dear Sir or Madam," %}</p>
+
+<p style="margin-bottom: 1em;">{% trans "To reset your password, please go to the following page:" %}</p>
+
+<p style="margin-bottom: 1em;"><a href="{{ password_reset_url }}">{{ password_reset_url }}</a></p>
+
+<p style="margin-bottom: 1em;">{% trans "If you do not wish to reset your password, ignore this message. It will expire in 24 hours." %}</p>
+
+<p style="margin-bottom: 1em;">
+    {% trans "Kind regards," %}<br />
+    {% trans "TempSurge Team" %}
+</p>
+
+</body>
+</html>

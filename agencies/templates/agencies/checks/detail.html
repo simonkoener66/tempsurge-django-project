@@ -1,0 +1,162 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Check Details{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Check</li>
+    <li class="active">Details</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>        
+        <a href="{% url "agencies_checks_list" %}">Check</a>
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Check #{{identifier}}
+            <i class="icon-double-angle-right"></i>
+            Details
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <p class="text-left">
+    	<a href="{% url 'agencies_checks_backtosearch' %}">Back to Search</a>
+    </p>
+
+    <div class="row">
+    <div class="col-xs-12">
+
+        <div class="tabbable">
+	        <ul class="nav nav-tabs padding-16">
+	            <li class="active">
+	                <a data-toggle="tab" href="#check-detail-check">
+	                    <i class="green icon-edit bigger-125"></i>
+	                    Check
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#check-detail-amount">
+	                    <i class="purple icon-map-marker bigger-125"></i>
+	                    Amount
+	                </a>
+	            </li>
+	            
+	        </ul>
+
+	        <div class="tab-content profile-edit-tab-content">
+
+	            {# Check Details #}
+
+	            <div id="check-detail-check" class="tab-pane active">
+	            	<br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Check ID</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ check.id }}</span>
+		                </div>
+		            </div>		
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Check Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ check.checkdate }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Bill Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ check.timeentry.we_bill }}</span>
+		                </div>
+		            </div>   
+	            </div>
+
+	            {# Amount #}
+
+	            <div id="check-detail-amount" class="tab-pane">
+	            	<br/>
+	                <div class="table-responsive">
+			            <table class="table table-striped table-bordered table-hover">
+			                <thead>
+				                <tr>                   
+				                    <th></th>
+				                    <th></th>                   
+				                    <th>Rate</th>
+				                    <th>Hours</th>
+				                    <th>Amount</th>				                    
+				                </tr>
+			                </thead>
+
+			                <tbody>			                
+			                    <tr class="">                       
+			                        <td><b>Wages</b></td>
+			                        <td><b>Regular Hours</b></td>
+			                        <td>{{ pay_rate }}</td>
+			                        <td>{{ hours_regular }}</td>
+			                        <td>${{ regular_amount }}</td>
+			                    </tr>		
+			                    <tr class="">                       
+			                        <td><b></b></td>
+			                        <td><b>Overtime Hours</b></td>
+			                        <td>{{ ot_pay }}</td>
+			                        <td>{{ hours_overtime }}</td>
+			                        <td>${{ overtime_amount }}</td>
+			                    </tr>	
+			                    <tr class="">                       
+			                        <td><b></b></td>
+			                        <td><b>Doubletime Hours</b></td>
+			                        <td>{{ dt_pay }}</td>
+			                        <td>{{ hours_doubletime }}</td>
+			                        <td>${{ doubletime_amount }}</td>
+			                    </tr>		
+			                    <tr class="">                       
+			                        <td><b>Tax</b></td>
+			                        <td><b></b></td>
+			                        <td></td>
+			                        <td></td>
+			                        <td>${{ tax }}</td>
+			                    </tr>
+			                    <tr class="">                       
+			                        <td><b>Gross</b></td>
+			                        <td><b></b></td>
+			                        <td></td>
+			                        <td></td>
+			                        <td>${{ gross }}</td>
+			                    </tr>
+			                </tbody>
+			            </table>			            
+			        </div>
+	            </div>
+
+	        </div>
+	    </div>
+    
+    </div>
+    </div>
+{% endblock %}
+
+
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+    
+    <script type="text/javascript">        
+        hash = window.location.hash.substring(1);
+        if(hash!=""){
+            $('.nav-tabs li').removeClass('active');
+            $('.nav-tabs li a[href=#'+hash+']').parent().addClass('active');
+            $('div.tab-pane').removeClass('active');
+            $('#'+hash).addClass('active');
+        }
+    </script>
+{% endblock %}

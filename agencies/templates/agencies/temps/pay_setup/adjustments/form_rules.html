@@ -1,0 +1,137 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+{% load form %}
+
+{% block title %}Tempsurge - Pay Adjustment Rule{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li>Pay Setup</li>
+    <li>Adjustments</li>
+    <li class="active">Rules</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <li class="icon-double-angle-right"></li>
+            {{ user.first_name }} {{ user.last_name }}
+            <i class="icon-double-angle-right"></i>
+            Pay Setup
+            <i class="icon-double-angle-right"></i>
+            Adjustment
+            <i class="icon-double-angle-right"></i>
+            Rules
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.extra_tags == 'adjustment_saved' %}
+                        {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if formset.errors %}
+                {% include "tempsurge/forms/errors.html" %}
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" class="form-horizontal">
+                {% csrf_token %}
+
+                {{ formset.management_form }}
+
+                <div class="modal-content">
+                    <div class="modal-header" data-target="#modal-step-contents">
+                        <ul class="wizard-steps">
+                            <li data-target="#modal-step1" class="complete">
+                                <span class="step">1</span>
+                                <span class="title">Create Adjustment </span>
+                            </li>
+
+                            <li data-target="#modal-step2" class="active">
+                                <span class="step">2</span>
+                                <span class="title">Add Rules</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="well" style="margin-bottom: 0">
+                        <strong>{{ adjustment.adjustment }}</strong>
+                        {% if adjustment.description %}
+                            <br>
+                            {{ adjustment.description }}
+                        {% endif %}
+                    </div>
+
+                    <div class="modal-body step-content" id="modal-step-contents">
+                        <h3 class="lighter block green">Adjustment Rules</h3>
+
+                        {# {% crispy formset adjustment_rule_helper %} #}
+
+                        {% for form in formset %}
+                            {{ form.id }}
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4>{% if form.id.value == None %}New Rule{% else %}Rule #{{ form.id.value }}{% endif %}</h4>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        {% crispy form adjustment_rule_helper %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                        {% endfor %}
+                    </div>
+
+                    <div class="modal-footer wizard-actions">
+                        <a href="{% url 'agencies_temps_pay_setup_adjustments_edit' user.id adjustment.id %}" class="btn btn-sm btn-prev">
+                            <i class="icon-arrow-left"></i>
+                            Prev
+                        </a>
+
+                        <button type="submit" name="add-another-btn" class="btn btn-success btn-sm btn-next">
+                            Save & Add Another
+                            <i class="icon-save icon-on-right"></i>
+                        </button>
+
+                        <button name="finish-btn" type="submit" class="btn btn-primary btn-sm btn-next">
+                            Finish
+                            <i class="icon-arrow-right icon-on-right"></i>
+                        </button>
+
+                        <a href="{% url 'agencies_temps_pay_setup_adjustments_list' user.id %}" class="btn btn-danger btn-sm pull-left">
+                            <i class="icon-remove"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script src="{% static "vendor/ace/js/fuelux/fuelux.wizard.min.js" %}"></script>
+
+    <script src="{% static "agencies/js/adjustment_rules.js" %}"></script>
+{% endblock %}

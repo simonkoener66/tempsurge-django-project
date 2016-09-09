@@ -1,0 +1,18 @@
+#id_date_of_birth_day {
+    display: inline;
+    width: 18%;
+}
+
+#id_date_of_birth_month {
+    display: inline;
+    width: 38%;
+}
+
+#id_date_of_birth_year {
+    display: inline;
+    width: 30%;
+}
+
+legend {
+    font-size: 1.2em;
+}

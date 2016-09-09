@@ -1,0 +1,152 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Employee Assignment Restrictions{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li class="active">Assignment Restrictions</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <li class="icon-double-angle-right"></li>
+            {{ user.first_name }} {{ user.last_name }}
+            <i class="icon-double-angle-right"></i>
+            Assignment Restrictions
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.extra_tags == 'assignment_restriction_deleted' or message.extra_tags == 'assignment_restriction_saved' %}
+                        {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <h4 class="header blue bolder smaller">Initiated by employee</h4>
+
+            <p class="text-right">
+                <a href="{% url "agencies_temps_assignment_restrictions_add" user.id "edc" %}" class="btn btn-sm btn-primary">New Restriction By Employee</a>
+            </p>
+
+            {% for ar in restrictions_by_employee %}
+                {% cycle '<div class="row">' '' '' %}
+                <div class="col-sm-4">
+                    <div class="widget-box light-border" style="opacity: 1; z-index: 0;">
+                        <div class="widget-header header-color-dark">
+                            <h5 class="smaller">{{ ar.branch|truncatechars:45 }}</h5>
+
+                            <div class="widget-toolbar">
+                                <a href="{% url "agencies_temps_assignment_restrictions_edit" user.id ar.id %}"><span class="badge badge-warning">Edit</span></a>
+                                <a href="#" data-id="{{ ar.id }}" id="big-delete-confirm-{{ ar.id }}"><span class="badge badge-danger">Delete</span></a>
+                            </div>
+                        </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main padding-6">
+                                <div class="alert alert-info">
+                                    <p>{{ ar.description }}</p>
+
+                                    {% if ar.all_departments %}
+                                        <p><span class="label label-inverse arrowed">All Departments</span></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% cycle '' '' '</div><br>' as closing_div %}
+
+                {% if forloop.last and closing_div == '' %}
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="alert alert-block alert-info">
+                    <p>No Restrictions</p>
+                </div>
+            {% endfor %}
+
+        <h4 class="header blue bolder smaller">Initiated by customer</h4>
+
+        <p class="text-right">
+            <a href="{% url "agencies_temps_assignment_restrictions_add" user.id "cde" %}" class="btn btn-sm btn-primary">New Restriction By Customer</a>
+        </p>
+
+        {% for ar in restrictions_by_client %}
+            {% cycle '<div class="row">' '' '' %}
+            <div class="col-sm-4">
+                <div class="widget-box light-border" style="opacity: 1; z-index: 0;">
+                    <div class="widget-header header-color-dark">
+                        <h5 class="smaller">{{ ar.branch|truncatechars:45 }}</h5>
+
+                        <div class="widget-toolbar">
+                            <a href="{% url "agencies_temps_assignment_restrictions_edit" user.id ar.id %}"><span class="badge badge-warning">Edit</span></a>
+                            <a href="#" data-id="{{ ar.id }}" id="big-delete-confirm-{{ ar.id }}"><span class="badge badge-danger">Delete</span></a>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main padding-6">
+                            <div class="alert alert-info">
+                                <p>{{ ar.description }}</p>
+
+                                {% if ar.all_departments %}
+                                    <p><span class="label label-inverse arrowed">All Departments</span></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% cycle '' '' '</div><br>' as closing_div %}
+
+            {% if forloop.last and closing_div == '' %}
+                </div>
+            {% endif %}
+        {% empty %}
+                <div class="alert alert-block alert-info">
+                    <p>No Restrictions</p>
+                </div>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("a[id^='big-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to delete this assignment restrictions?", function (result) {
+                    if (result) {
+                        window.location = '/agencies/employees/update/details/assignment-restrictions/delete/' + id
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+
+{% endblock %}

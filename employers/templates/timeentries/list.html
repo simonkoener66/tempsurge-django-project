@@ -1,0 +1,165 @@
+{% extends "employers/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Timeentry List{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Time Entries</li>    
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Time Entries    
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+    
+    <div class="col-xs-12">
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.extra_tags == 'timeentry' %}
+                    {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <p class="text-right">
+            
+        </p>
+
+        <div class="well">
+            <form action="{{ request.get_full_path }}" method="get" class="form-inline" role="form">{% csrf_token %}
+                {{ order_form.order }}                
+                &nbsp;
+                {{ status_form.weekends }}                
+                &nbsp;
+                {{ status_form.status }}                
+                &nbsp;
+                <button type="submit" class="btn btn-purple btn-sm">
+                    Search
+                    <i class="icon-search icon-on-right bigger-110"></i>
+                </button>
+                &nbsp;
+                <a href="{% url "employers_timeentries_list" %}" class="btn btn-default btn-sm">
+                    Clear
+                    <i class="icon-remove icon-on-right bigger-110"></i>
+                </a>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>                    
+                    <th>ID</th>
+                    <th>Employee</th>
+                    <th>Job Title</th>
+                    <th>Customer</th>
+                    <th>Department</th>
+                    <th>Pay Code</th>
+                    <th>RT Hrs</th>
+                    <th>OT Hrs</th>
+                    <th>Bill</th>
+                    <th>Pay</th>
+                    <th>OT Pay</th>
+                    <th>DT Pay</th>
+                    <th>WE Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for timeentry in timeentries %}
+                    <tr class="selected">                        
+                        <td>{{ timeentry.id }}</td>
+                        <td>{{ timeentry.assignment.employee }}</td>
+                        <td>{{ timeentry.assignment.order.job_title }}</td>                                       
+                        <td>{{ timeentry.assignment.order.customerdepartment.customer.customername }}</td>
+                        <td>{{ timeentry.assignment.order.customerdepartment.depname }}</td>
+                        <td>{{ timeentry.pay_code }}</td>
+                        <td>{{ timeentry.hours_regular }}</td>
+                        <td>{{ timeentry.hours_overtime }}</td>
+                        <td>{{ timeentry.bill_rate }}</td>
+                        <td>{{ timeentry.pay_rate }}</td>              
+                        <td>{{ timeentry.ot_pay }}</td>
+                        <td>{{ timeentry.dt_pay }}</td>
+                        <td>{{ timeentry.we_date }}</td>
+                        <td>{{ timeentry.status }}</td> 
+                        <td>
+                            <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+                                <a href="{% url "employers_timeentries_detail" timeentry.id %}" class="btn btn-xs btn-success">
+                                    Detail
+                                </a>
+                                {% if timeentry.status_id == 1 or timeentry.status_id == 2 %}
+                                <a href="{% url "employers_timeentries_update" timeentry.id %}" class="btn btn-xs btn-success">
+                                    Update
+                                </a>
+                                {% endif %}
+                                {% if timeentry.status_id == 2 %}
+                                <a href="{% url "employers_timeentries_approve" timeentry.id %}" class="btn btn-xs btn-success">
+                                    Proof
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="15">
+                            <div class="text-center"><h5>Your search yielded no results.</h5></div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if timeentries %}
+                <ul class="pager">
+                    {% if timeentries.has_previous %}
+                        <li class="previous">
+                            <a href="{{ query_string }}page={{ timeentries.previous_page_number }}">← Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="">
+                        <a>Page {{ timeentries.number }} of {{ timeentries.paginator.num_pages }}</a>
+                    </li>
+
+                    {% if timeentries.has_next %}
+                        <li class="next">
+                            <a href="{{ query_string }}page={{ timeentries.next_page_number }}">Next →</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /span -->
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        
+    </script>
+{% endblock %}

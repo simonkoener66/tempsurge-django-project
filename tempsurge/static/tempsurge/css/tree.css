@@ -1,0 +1,29 @@
+ul.tree, ul.tree ul {
+    list-style-type: none;
+    background: url(/static/tempsurge/img/tree/vline.png) repeat-y left top;
+    margin: 0;
+    padding: 0;
+}
+
+ul.tree ul {
+    margin-right: 10px;
+}
+
+ul.tree li {
+    margin: 0;
+    padding: 0 12px;
+    line-height: 20px;
+    background: url(/static/tempsurge/img/tree/node.png) no-repeat left top;
+    color: #369;
+    /*font-weight: bold;*/
+}
+
+ul.tree li.last {
+    background: #fff url(/static/tempsurge/img/tree/lastnode.png) no-repeat left top;
+    /*background: url(/static/tempsurge/img/tree/lastnode.png) no-repeat left top;*/
+}
+
+ul.tree li:last-child {
+    background: #fff url(/static/tempsurge/img/tree/lastnode.png) no-repeat left top;
+    /*background: url(/static/tempsurge/img/tree/lastnode.png) no-repeat left top;*/
+}

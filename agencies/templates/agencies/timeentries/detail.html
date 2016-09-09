@@ -1,0 +1,480 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Time Entry Details{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Time Entry</li>
+    <li class="active">Details</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>        
+        <a href="{% url "agencies_timeentries_list" %}">Time Entry</a>        
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Time Entry #{{ identifier }}
+            <i class="icon-double-angle-right"></i>
+            Details
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'timeentry' %}
+                {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'agencies_timeentries_backtosearch' %}">Back to Search</a>
+	<p class="text-right">
+	    <a href="{% url "agencies_assignments_update" timeentry.assignment.order.id timeentry.assignment.id %}" class="btn btn-xs btn-success">
+	        View Assignment
+	    </a>
+	    <a href="{% url "agencies_temps_show" timeentry.assignment.employee.user.id %}" class="btn btn-xs btn-success">
+	        View Employee
+	    </a>
+	    <a href="{% url "agencies_orders_update" timeentry.assignment.order.id %}" class="btn btn-xs btn-success">
+	        View Order
+	    </a>
+	    {% if timeentry.status_id == 1 or timeentry.status_id == 2 %}
+	    <a href="{% url "agencies_timeentries_update" identifier %}" class="btn btn-xs btn-info">
+	        Update
+	    </a>
+	    {% endif %}
+	    {% if timeentry.status_id == 2 %}
+	    <a href="{% url "agencies_timeentries_approve" identifier %}" class="btn btn-xs btn-info">
+	        Proof
+	    </a>
+	    {% endif %}
+	    {% if timeentry.status_id == 3 %}
+	    <a href="{% url "agencies_timeentries_runpayroll" identifier %}" class="btn btn-xs btn-info">
+	        Payroll Run
+	    </a>
+	    {% endif %}
+	    {% if timeentry.status_id == 4 %}
+	    <a href="{% url "agencies_timeentries_runinvoice" identifier %}" class="btn btn-xs btn-info">
+	        Invoice Run
+	    </a>
+	    {% endif %}
+    </p>
+
+    <div class="row">
+    <div class="col-xs-12">
+
+        <div class="tabbable">
+	        <ul class="nav nav-tabs padding-16">
+	            <li class="active">
+	                <a data-toggle="tab" href="#timeentry-detail-job">
+	                    <i class="green icon-edit bigger-125"></i>
+	                    Job
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#timeentry-detail-payroll">
+	                    <i class="blue icon-key bigger-125"></i>
+	                    Payroll Info
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#timeentry-detail-rates">
+	                    <i class="blue icon-key bigger-125"></i>
+	                    Rates
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#timeentry-detail-hourly">
+	                    <i class="purple icon-map-marker bigger-125"></i>
+	                    Hourly
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#timeentry-detail-salary">
+	                    <i class="purple icon-tags bigger-125"></i>
+	                    Salary
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#timeentry-detail-units">
+	                    <i class="purple icon-money bigger-125"></i>
+	                    Units
+	                </a>
+	            </li>
+
+	            
+	        </ul>
+
+	        <div class="tab-content profile-edit-tab-content">
+
+	            {# Order Information #}
+
+	            <div id="timeentry-detail-job" class="tab-pane active">
+	            	<br/>
+
+	            	<div class="profile-info-row">
+		                <div class="profile-info-name">Employee</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.assignment.employee }}</span>
+		                </div>
+		            </div>
+
+		            <br/>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Customer</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.assignment.order.customerdepartment.customer }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Department</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.assignment.order.customerdepartment.depname }}</span>
+		                </div>
+		            </div>
+
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Job Title</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.assignment.order.job_title }}</span>
+		                </div>
+		            </div>
+
+		            
+		            <br/>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Status</div>
+
+		                <div class="profile-info-value">
+		                    <span class=""> 
+		                    {{ timeentry.status }}
+                        	</span>
+		                </div>
+		            </div>
+	            </div>
+
+	        	{# Payroll Info #}
+
+	            <div id="timeentry-detail-payroll" class="tab-pane">
+	                <br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">WE Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.we_bill }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">WE Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.we_date }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Work Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.work_date }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Inv Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.inv_date }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Pay Code</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.pay_code }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Payroll Note</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.pay_roll }}</span>
+		                </div>
+		            </div>
+	            </div>
+
+	            {# Rates #}
+
+	            <div id="timeentry-detail-rates" class="tab-pane">	                
+	            	<br/>
+	                <br/>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Bill Rate</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.bill_rate }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">OT Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.ot_bill }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">DT Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.dt_bill }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Pay Rate</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.pay_rate }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">OT Pay</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.ot_pay }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">DT Pay</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.dt_pay }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Adj Gross</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.adj_gross }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Adj Net</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.adj_net }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">OT Plan</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.ot_plan }}</span>
+		                </div>
+		            </div>
+	            </div>
+
+	            {# Hourly #}
+
+	            <div id="timeentry-detail-hourly" class="tab-pane">
+	            	<br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Regular Hours</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_regular }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Overtime Hours</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_overtime }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Doubletime Hours</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_doubletime }}</span>
+		                </div>
+		            </div>
+
+		            <br/>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Number Of Days</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.number_of_days }}</span>
+		                </div>
+		            </div>
+
+		            <br/>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 1</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day1 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 2</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day2 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 3</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day3 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 4</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day4 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 5</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day5 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 6</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day6 }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Day 7</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_day7 }}</span>
+		                </div>
+		            </div>
+
+		            
+	            </div>
+
+	            {# Salary #}
+
+	            <div id="timeentry-detail-salary" class="tab-pane">
+	                <br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Salary</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.salary }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Bill Amount</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.bill_amount }}</span>
+		                </div>
+		            </div>
+
+					<div class="profile-info-row">
+		                <div class="profile-info-name">Total Regular Hours </div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.hours_total_regular }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Salary Approved</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.salary_approved }}</span>
+		                </div>
+		            </div>
+	            </div>
+
+	            {# Units #}
+
+	            <div id="timeentry-detail-units" class="tab-pane">	                
+	            	<br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Units</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.units }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Units Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.units_bill }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Units Pay</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ timeentry.units_pay }}</span>
+		                </div>
+		            </div>
+	            </div>
+	           
+	        </div>
+	    </div>
+    
+    </div>
+    </div>
+{% endblock %}

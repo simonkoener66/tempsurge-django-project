@@ -1,0 +1,34 @@
+{% load form %}
+
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="id_{{ field.name }}" class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">{% if caps %}{{ field.label|upper }}{% else %}{{ field.label }}{% endif %} </label>
+
+    <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+            {{ field }}
+            {# <input type="text" name="{{ field.name }}" value="{{ field.value }}" id="form_{{ field.name }}" class="width-100"> #}
+            {% if field.errors %}<i class="icon-remove-sign"></i>{% endif %}
+        </span>
+    </div>
+    <div class="help-block col-xs-12 col-sm-reset inline">
+        {% if field.errors %}
+            {% for error in field.errors %}
+                {{ error|escape }}
+            {% endfor %}
+        {% elif note %}
+            {{ note }}
+        {% endif %}
+    </div>
+</div>
+
+{% if not no_space %}
+    <div class="space-4"></div>
+{% endif %}
+
+
+
+
+
+
+
+

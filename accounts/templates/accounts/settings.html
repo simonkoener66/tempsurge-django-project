@@ -1,0 +1,208 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge Settings{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li class="active">Settings</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Profile
+        <small>
+            <i class="icon-double-angle-right"></i>
+            settings
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user_form.errors or profile_form.errors %}
+                {% include "tempsurge/components/alert.html" with connotation="danger" message="Please check the errors below." %}
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.extra_tags == "account_activated" or message.extra_tags == "profile_updated" or message.extra_tags == "email_changed" %}
+                        {% include "tempsurge/components/alert.html" with connotation="success" message=message %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+
+
+
+        <div class="row">
+									<div class="col-sm-6">
+										<div class="tabbable tabs-left">
+											<ul class="nav nav-tabs" id="myTab3">
+												<li class="">
+													<a data-toggle="tab" href="#home3">
+														<i class="pink icon-dashboard bigger-110"></i>
+														Home
+													</a>
+												</li>
+
+												<li class="">
+													<a data-toggle="tab" href="#profile3">
+														<i class="blue icon-user bigger-110"></i>
+														Profile
+													</a>
+												</li>
+
+												<li class="active">
+													<a data-toggle="tab" href="#dropdown13">
+														<i class="icon-rocket"></i>
+														More
+													</a>
+												</li>
+											</ul>
+
+											<div class="tab-content">
+												<div id="home3" class="tab-pane">
+													<p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+													<p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+												</div>
+
+												<div id="profile3" class="tab-pane">
+													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+													<p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+												</div>
+
+												<div id="dropdown13" class="tab-pane active">
+													<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
+													<p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+												</div>
+											</div>
+										</div>
+									</div><!-- /span -->
+
+									<div class="vspace-sm-6"></div>
+
+									<div class="col-sm-6">
+										<div class="tabbable">
+											<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+												<li class="active">
+													<a data-toggle="tab" href="#home4">Home</a>
+												</li>
+
+												<li>
+													<a data-toggle="tab" href="#profile4">Profile</a>
+												</li>
+
+												<li>
+													<a data-toggle="tab" href="#dropdown14">More</a>
+												</li>
+											</ul>
+
+											<div class="tab-content">
+												<div id="home4" class="tab-pane in active">
+													<p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+												</div>
+
+												<div id="profile4" class="tab-pane">
+													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+												</div>
+
+												<div id="dropdown14" class="tab-pane">
+													<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
+												</div>
+											</div>
+										</div>
+									</div><!-- /span -->
+								</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {% comment %}
+
+            <div class="tabbable tabs-left">
+                <ul class="nav nav-tabs" id="myTab3">
+                    <li class="active">
+                        <a data-toggle="tab" href="#home3">
+                            <i class="pink icon-globe bigger-110"></i>
+                            Language
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a data-toggle="tab" href="#profile3">
+                            <i class="blue icon-key bigger-110"></i>
+                            Password
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a data-toggle="tab" href="#dropdown13">
+                            <i class="icon-lock"></i>
+                            Security
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="home3" class="tab-pane active">
+                        <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+
+                        <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                    </div>
+
+                    <div id="profile3" class="tab-pane">
+                        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+
+                        <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                    </div>
+
+                    <div id="dropdown13" class="tab-pane">
+                        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
+
+                        <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                    </div>
+                </div>
+            </div>
+{% endcomment %}
+
+            {% comment %}
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                {% include "tempsurge/forms/field.html" with field=user_form.first_name %}
+                {% include "tempsurge/forms/field.html" with field=user_form.last_name %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.gender %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.address_line_1 %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.address_line_2 %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.date_of_birth %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.country %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.city %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.phone %}
+                {% include "tempsurge/forms/field.html" with field=user_form.email %}
+                {% include "tempsurge/forms/field.html" with field=profile_form.biography no_space=True %}
+                {% include "tempsurge/forms/submit.html" %}
+            </form>
+            {% endcomment %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+{% endblock %}

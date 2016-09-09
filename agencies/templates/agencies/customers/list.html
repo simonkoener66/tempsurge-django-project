@@ -1,0 +1,178 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Customer{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Customer</li>
+    <li class="active">Search</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Customer
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Search
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+    <div class="col-xs-12">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.extra_tags == 'customer' %}
+                    {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <p class="text-right">
+            <a href="{% url "agencies_customers_create" %}" class="btn btn-sm btn-primary">New Customer</a>
+        </p>
+
+        <div class="well">
+            <form action="{{ request.get_full_path }}" method="get" class="form-inline" role="form">{% csrf_token %}
+                ID {{ filter_form.customer_id }} &nbsp;
+                Name {{ filter_form.customer_name }} &nbsp;
+                Active {{ filter_form.active }} &nbsp;
+                Include Departments {{ filter_form.include_dept }}&nbsp;
+                Account Manager {{ filter_form.accountmanager }} &nbsp;
+                Branch {{ filter_form.branch }} &nbsp;
+                
+                <button type="submit" class="btn btn-purple btn-sm">
+                    Search
+                    <i class="icon-search icon-on-right bigger-110"></i>
+                </button>
+                <a href="{% url "agencies_customers_list" %}" class="btn btn-default btn-sm">
+                    Clear
+                    <i class="icon-remove icon-on-right bigger-110"></i>
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Account Manager</th>
+                    <th>Branch</th>
+                    <th>Active</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>State</th>                    
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for dept in depts %}
+                    <tr class="selected">
+                        <td>{{ dept.customer.id }}</td>
+                        <td>{{ dept.customer.customername }}</td>
+                        <td>{{ dept.depname }}</td>
+                        <td>{{ dept.customer.accountmanager }}</td>
+                        <td>{{ dept.customer.branch }}</td>
+                        <td>
+                            {% if dept.active %}
+                                <span class="label label-sm label-success">Active</span>
+                            {% else %}
+                                <span class="label label-sm label-danger">Inactive</span>
+                            {% endif %}
+                        </td>              
+                        <td>{{ dept.customer.user.userprofile.phone }}</td>
+                        <td>{{ dept.customer.user.userprofile.city }}</td>
+                        <td>{{ dept.customer.user.userprofile.state }}</td>
+                        
+                        <td>
+                            <a href="{% url "agencies_customers_update" dept.customer.id %}" class="btn btn-xs btn-success">
+                                Details
+                            </a>
+                            <a href="{% url "agencies_customers_billingsetup" dept.customer.id %}" class="btn btn-xs btn-success">
+                                Billing Setup
+                            </a>
+                            <a href="{% url "agencies_customers_creditpayroll" dept.customer.id %}" class="btn btn-xs btn-success">
+                                Credit and Payroll
+                            </a>
+                            <a href="{% url "agencies_customers_misc" dept.customer.id %}" class="btn btn-xs btn-success">
+                                Misc
+                            </a>
+                            <a href="#" data-id="{{ dept.customer.id }}" id="customer-delete-confirm-{{ dept.customer.id }}" class="btn btn-xs btn-danger">
+                                    Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="12">
+                            <div class="text-center"><h5>Your search yielded no results.</h5></div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if depts %}
+                <ul class="pager">
+                    {% if depts.has_previous %}
+                        <li class="previous">
+                            <a href="{{ query_string }}page={{ depts.previous_page_number }}">← Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="">
+                        <a>Page {{ depts.number }} of {{ depts.paginator.num_pages }}</a>
+                    </li>
+
+                    {% if depts.has_next %}
+                        <li class="next">
+                            <a href="{{ query_string }}page={{ depts.next_page_number }}">Next →</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /span -->
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("a[id^='customer-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var customer_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this customer?", function (result) {
+                    if (result) {
+                        window.location = '/agencies/customers/delete/' + customer_id
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

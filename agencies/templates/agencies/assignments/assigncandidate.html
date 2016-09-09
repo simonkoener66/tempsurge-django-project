@@ -1,0 +1,137 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Order Assignments{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Order</li>
+    <li class="active">Assignment</li>
+    <li class="active">New</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "agencies_orders_update" order.id %}">Order #{{ order.id }}</a>
+    	
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Assignment
+            <i class="icon-double-angle-right"></i>
+            New
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if assignment_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-assignment">
+                                <i class="green icon-edit bigger-125"></i>
+                                Assignment Information
+                            </a>
+                        </li>                        
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Assignment Information #}
+
+                        <div id="edit-assignment" class="tab-pane active">
+
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Customer</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ order.customerdepartment.customer }}</span>
+                                </div>
+                            </div>  
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Department</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ order.customerdepartment }}</span>
+                                </div>
+                            </div>  
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Employee</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ candidate }}</span>
+                                </div>
+                            </div>  
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Job Title</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ order.job_title }}</span>
+                                </div>
+                            </div>  
+                            <div class="profile-info-row">
+                                <div class="profile-info-name">Order ID</div>
+                                <div class="profile-info-value">
+                                    <span class="">{{ order.id }}</span>
+                                </div>
+                            </div>  
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Assign
+                        </button>   
+
+                        <a href="{% url "agencies_orders_assignments" order.id %}#order-detail-candidates" class="btn btn-info">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        $('#id_interest_codes').chosen({});
+    </script>
+{% endblock %}

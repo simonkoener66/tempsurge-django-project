@@ -1,0 +1,58 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+{% load mptt_tags %}
+
+{% block title %}Tempsurge - Interest Codes{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Administration</li>
+    <li class="active">Interest Codes</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Administration
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Interest Codes
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <link href="{% static "tempsurge/css/tree.css" %}" rel="stylesheet" type="text/css">
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('ul.tree li:last-child').addClass('last');
+                });
+            </script>
+
+            <p class="text-right">
+                <a href="{% url "agencies_interest_codes_add" %}" class="btn btn-sm btn-primary">New Interest Code</a>
+            </p>
+
+            <ul class="tree">
+                {% recursetree nodes %}
+                    <li>
+                        <a href="{% url "agencies_interest_codes_listing_edit" node.id  %}">{{ node.name }}</a>
+                        {% if not node.is_leaf_node %}
+                            <ul class="children">
+                                {{ children }}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endrecursetree %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

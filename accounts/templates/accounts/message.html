@@ -1,0 +1,45 @@
+{% extends "accounts/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge Login{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+
+    <li class="active">Login</li>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div id="login-box" class="login-box visible widget-box no-border">
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4 class="header blue lighter bigger">
+                    <i class="icon-coffee green"></i>
+                    {% if title %}{{ title }}{% else %}System Message{% endif %}
+                </h4>
+
+                <div class="space-6"></div>
+
+                {# <div class="alert alert-{% if connotation %}{{ connotation }}{% else %}info{% endif %}"> #}
+                    <p>{{ message|safe }}</p>
+                {# </div> #}
+            </div>
+            <!-- /widget-main -->
+        </div>
+        <!-- /widget-body -->
+    </div>
+    <!-- /login-box -->
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+        $(function () {
+            $("#id_username").focus();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% load i18n %}
+{% trans "Dear Sir or Madam," %}
+
+{% trans "Please click on the following link to complete the email change process with TempSurge:" %}
+
+{{ change_email_url }}
+
+{% trans "Kind regards," %}
+{% trans "TempSurge Team" %}

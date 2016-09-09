@@ -1,0 +1,77 @@
+- model: auth.User
+  pk: 2
+  fields:
+    username: joseph.triplett
+    first_name: Joseph
+    last_name: Triplett
+    email: joseph.triplett@tempsurge.com
+- model: auth.User
+  pk: 3
+  fields:
+    username: cinthya.nava
+    first_name: Cinthya
+    last_name: Nava
+    email: cinthya.nava@tempsurge.com
+- model: auth.User
+  pk: 4
+  fields:
+    username: yareze.castillo
+    first_name: Yareze
+    last_name: Castillo
+    email: yareze.castillo@tempsurge.com
+- model: auth.User
+  pk: 5
+  fields:
+    username: joe.limon
+    first_name: Joe
+    last_name: Limon
+    email: joe.limon@tempsurge.com
+- model: auth.User
+  pk: 6
+  fields:
+    username: Platstaff1
+    first_name: Platstaff1
+    last_name: Platstaff1
+    email: Platstaff1@tempsurge.com
+- model: auth.User
+  pk: 7
+  fields:
+    username: platstaff.lp
+    first_name: platstaff
+    last_name: lp
+    email: platstaff.lp@tempsurge.com
+- model: auth.User
+  pk: 8
+  fields:
+    username: M.Moctezuma
+    first_name: M
+    last_name: Moctezuma
+    email: M.Moctezuma@tempsurge.com
+- model: auth.User
+  pk: 9
+  fields:
+    username: WC5_TWSelect
+    first_name: WC5
+    last_name: TWSelect
+    email: WC5_TWSelect@tempsurge.com
+- model: auth.User
+  pk: 10
+  fields:
+    username: ryan.sellers
+    first_name: Ryan
+    last_name: Sellers
+    email: ryan.sellers@tempsurge.com
+- model: auth.User
+  pk: 11
+  fields:
+    username: george.cruz
+    first_name: George
+    last_name: Cruz
+    email: george.cruz@tempsurge.com
+- model: auth.User
+  pk: 12
+  fields:
+    username: Rosa.Gutierrez
+    first_name: Rosa
+    last_name: Gutierrez
+    email: Rosa.Gutierrez@tempsurge.com

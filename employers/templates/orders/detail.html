@@ -1,0 +1,426 @@
+{% extends "employers/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Display Order Details{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Orders</li>
+    <li class="active">Order Detail Page</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>        
+        <a href="{% url "employers_orders_list" %}">Orders</a>        
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Order Detail Page
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'order_saved' or message.extra_tags == 'order_deleted' %}
+                {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+    <div class="col-xs-12">
+
+                <div class="tabbable">
+	        <ul class="nav nav-tabs padding-16">
+	            <li class="active">
+	                <a data-toggle="tab" href="#order-detail-customer">
+	                    <i class="green icon-edit bigger-125"></i>
+	                    Customer
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#order-detail-financial">
+	                    <i class="purple icon-map-marker bigger-125"></i>
+	                    Financial
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#order-detail-job">
+	                    <i class="purple icon-tags bigger-125"></i>
+	                    Job
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#order-detail-other">
+	                    <i class="purple icon-money bigger-125"></i>
+	                    Other
+	                </a>
+	            </li>
+
+	            <li class="">
+	                <a data-toggle="tab" href="#order-detail-assignments">
+	                    <i class="blue icon-key bigger-125"></i>
+	                    Assignments
+	                </a>
+	            </li>
+	        </ul>
+
+	        <div class="tab-content profile-edit-tab-content">
+
+	            {# Customer Information #}
+
+	            <div id="order-detail-customer" class="tab-pane active">
+	            	<br/>
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Customer</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.customerdepartment.customer }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Department</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.customerdepartment }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Customer ID</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.customerdepartment.customer.id }}</span>
+		                </div>
+		            </div>
+
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Directions</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.directions }}</span>
+		                </div>
+		            </div>		            
+	            </div>
+
+	            {# Financial Details #}
+
+	            <div id="order-detail-financial" class="tab-pane">
+	            	<div class="profile-info-row">
+		                <div class="profile-info-name">Pay Rate</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.pay_rate }}</span>
+		                </div>
+		            </div>		    
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Bill Rate</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.bill_rate }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Overtime Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.overtime_bill }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Doubletime Bill</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.doubletime_bill }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Overtime Plan</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.overtime_plan }}</span>
+		                </div>
+		            </div>
+					<div class="profile-info-row">
+		                <div class="profile-info-name">OT Factor</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.ot_factor }}</span>
+		                </div>
+		            </div>
+	            	<div class="profile-info-row">
+		                <div class="profile-info-name">Multiplier</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.multiplier }}</span>
+		                </div>
+		            </div>
+					<div class="profile-info-row">
+		                <div class="profile-info-name">Pay Periods</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.pay_periods }}</span>
+		                </div>
+		            </div>
+					<div class="profile-info-row">
+		                <div class="profile-info-name">GP Percent</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.gp_percent }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">GP Estimate</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.gp_estimate }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Desired GM</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.desired_gm }}</span>
+		                </div>
+		            </div>
+	            </div>
+
+	            {# Job Information #}
+
+	            <div id="order-detail-job" class="tab-pane">
+	                <div class="profile-info-row">
+		                <div class="profile-info-name">Required</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.capacity_required }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Assigned</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.capacity_assigned }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Order Type</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.order_type }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Job Title</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.job_title }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Description</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.description }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Dress Code</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.dress_code }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Safety Notes</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.safety_notes }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Start Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.start_date }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Duration</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.duration }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Est. End Date</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.end_date }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Shift</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.shift }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Start Time</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.start_time }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">End Time</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.end_time }}</span>
+		                </div>
+		            </div>
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Shift Notes</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.shift_notes }}</span>
+		                </div>
+		            </div>		            
+	            </div>
+
+	            {# Other Information #}
+
+	            <div id="order-detail-other" class="tab-pane">	                
+	            	<div class="profile-info-row">
+		                <div class="profile-info-name">Status</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.status }}</span>
+		                </div>
+		            </div>	
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Rep</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.rep }}</span>
+		                </div>
+		            </div>	
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Branch</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.branch }}</span>
+		                </div>
+		            </div>	
+		            <div class="profile-info-row">
+		                <div class="profile-info-name">Notes</div>
+
+		                <div class="profile-info-value">
+		                    <span class="">{{ order.notes }}</span>
+		                </div>
+		            </div>	
+	            </div>
+	           
+	            {# Assignments #}
+
+	            <div id="order-detail-assignments" class="tab-pane">
+	                <div class="table-responsive">
+			            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+			                <thead>
+			                <tr>
+			                    <th class="center">
+			                        <label>
+			                            <input type="checkbox" class="ace">
+			                            <span class="lbl"></span>
+			                        </label>
+			                    </th>
+			                    <th>Assignment ID</th>
+			                    <th>Employee</th>
+			                    <th>Employee ID</th>
+			                    <th>Start Date</th>
+			                    <th>End Date</th>
+			                    <th></th>
+			                </tr>
+			                </thead>
+
+			                <tbody>
+			                {% for assignment in assignments %}
+			                    <tr class="selected">
+			                        <td class="center">
+			                            <label>
+			                                <input type="checkbox" class="ace">
+			                                <span class="lbl"></span>
+			                            </label>
+			                        </td>
+			                        <td>{{ assignment.id }}</td>
+			                        <td>{{ assignment.employee }}</td>				                    
+			                        <td>{{ assignment.employee.id }}</td>
+			                        <td>{{ assignment.expected_start_date }}</td>
+			                        <td>{{ assignment.expected_end_date }}</td>
+			                        <td>
+			                            <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+			                            	<a href="{% url "employers_assignments_update" order.id assignment.id %}" class="btn btn-xs btn-success">
+			                                    Edit
+			                                </a>	
+			                                <a href="#" data-id="{{ assignment.id }}" id="assignment-delete-confirm-{{ assignment.id }}" class="btn btn-xs btn-danger">
+			                                    Unassign
+			                                </a>			                                
+			                            </div>
+			                        </td>
+			                    </tr>
+			                {% empty %}
+			                    <tr>
+			                        <td colspan="12">
+			                            <div class="text-center"><h5>Your search yielded no results.</h5></div>
+			                        </td>
+			                    </tr>
+
+			                {% endfor %}
+			                </tbody>
+			            </table>
+			            
+			        </div>
+	            </div>
+
+	        </div>
+	    </div>
+    
+    </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("a[id^='assignment-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var assignment_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this assignment?", function (result) {
+                    if (result) {
+                        window.location = '/employers/orders/{{ order.id }}/unassign/' + assignment_id;
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

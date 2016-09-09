@@ -1,0 +1,76 @@
+{% extends "accounts/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge Password Reset{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div id="forgot-box" class="forgot-box
+     no-border">
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4 class="header red lighter bigger">
+                    <i class="icon-key"></i>
+                    Password Reset
+                </h4>
+
+                <div class="space-6"></div>
+                <p>
+                    Please choose a new password. Do not use a guessable password such as your phone number or date of birth.
+                </p>
+
+                {% if form.password.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> Please fill in the field correctly.
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{{ request.get_full_path }}" class="form-horizontal" role="form">{% csrf_token %}
+                    <fieldset>
+                        <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    <input name="password" type="password" id="id_password" class="form-control" placeholder="Password"/>
+                                    <i class="icon-lock"></i>
+                                </span>
+                        </label>
+
+                        <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    <input name="password_confirmation" type="password" class="form-control" placeholder="Password Confirmation"/>
+                                    <i class="icon-lock"></i>
+                                </span>
+                        </label>
+
+                        <div class="clearfix">
+                            <button type="submit" class="width-35 pull-right btn btn-sm btn-danger">
+                                <i class="icon-lightbulb"></i>
+                                Change
+                            </button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <!-- /widget-main -->
+
+            <div class="toolbar center">
+                <a href="{% url "accounts.views.sign_in" %}" class="back-to-login-link">
+                    Back to login
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <!-- /widget-body -->
+    </div><!-- /forgot-box -->
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+        $(function () {
+            $("#id_password").focus();
+        });
+    </script>
+{% endblock %}

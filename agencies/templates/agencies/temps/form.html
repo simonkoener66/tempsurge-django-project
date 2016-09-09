@@ -1,0 +1,205 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - {% if not identifier %}Add{% else %}Update{% endif %} Employee{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li class="active">{% if not identifier %}Add{% else %}Update{% endif %}</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <i class="icon-double-angle-right"></i>
+            {% if not identifier %}Add{% else %}Update{% endif %} Employee
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user_form.errors or profile_form.errors or temp_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-personal">
+                                <i class="green icon-edit bigger-125"></i>
+                                Personal Information
+                            </a>
+                        </li>
+
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-address">
+                                <i class="purple icon-map-marker bigger-125"></i>
+                                Address Information
+                            </a>
+                        </li>
+
+                        <li class="" id="interest-code-tab-li">
+                            <a data-toggle="tab" href="#edit-interest-code">
+                                <i class="purple icon-tags bigger-125"></i>
+                                Interest Codes
+                            </a>
+                        </li>
+
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-tax">
+                                <i class="purple icon-money bigger-125"></i>
+                                Tax Setup/Other
+                            </a>
+                        </li>
+
+                        {% comment %}
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-photo">
+                                <i class="blue icon-user bigger-125"></i>
+                                Photo
+                            </a>
+                        </li>
+                        {% endcomment %}
+
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-password">
+                                <i class="blue icon-key bigger-125"></i>
+                                Password
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Personal Information #}
+
+                        <div id="edit-personal" class="tab-pane active">
+                            <h4 class="header blue bolder smaller">Personal Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=temp_form.ssn caps=True %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.username %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.first_name %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.last_name %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.initial %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.phone %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.cell_phone %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.email %}
+                        </div>
+
+                        {# Address Information #}
+
+                        <div id="edit-address" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Address Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=profile_form.address_line_1 %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.address_line_2 %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.city %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.state %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.zip %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.county %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.country %}
+                        </div>
+
+                        {# Interest Codes #}
+
+                        <div id="edit-interest-code" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Interest Codes</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=temp_form.interest_codes %}
+                        </div>
+
+                        {# Tax Setup/Other #}
+
+                        <div id="edit-tax" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Tax Setup/Other</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=temp_form.branch %}
+                            {% include "tempsurge/forms/field.html" with field=temp_form.federal_exemptions %}
+                            {% include "tempsurge/forms/field.html" with field=temp_form.state_exemptions %}
+                        </div>
+
+                        {# Photo #}
+
+                        {% comment %}
+                        <div id="edit-photo" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Photo</h4>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="ace-file-input ace-file-multiple"><input type="file"><label class="file-label" data-title="Change avatar"><span class="file-name" data-title="No File ..."><i class="icon-picture"></i></span></label><a class="remove" href="#"><i class="icon-remove"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endcomment %}
+
+                        {# Password #}
+
+                        <div id="edit-password" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Password</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=user_form.password %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.password_confirmation %}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        $('#id_interest_codes').chosen({});
+    </script>
+{% endblock %}

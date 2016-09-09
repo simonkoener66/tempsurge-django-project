@@ -1,0 +1,54 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Payroll and Invoicing{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Payroll and Invoicing</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>        
+        Payroll and Invoicing
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+
+    <div class="row">
+    <div class="col-xs-12">
+
+        <h4 class="header blue bolder smaller">Timecards</h4>
+        {{ number_of_open_assignments }} Open Assignments <br/>
+        {{ number_of_unused_timeentries }} Unused Timecards <br/>
+        <a href="{% url "agencies_payroll_createunusedtimecards" %}">Create timecards from open assignments</a>
+        <br/>
+        <a href="{% url "agencies_payroll_removeunusedtimecards" %}">Remove Unused Timecards</a>
+        <br/>
+        <a href="{% url "agencies_timeentries_list" %}">Navigate to time entry</a>
+
+        <h4 class="header blue bolder smaller">Proofing</h4>
+        {{ number_of_claimed_timeentries }} Claimed Timecards <br/>
+        <a href="{% url "agencies_payroll_prooftransactions" %}">Proof transactions</a>
+        <br/>
+        <a href="{% url "agencies_incompletetransactions_list" %}">View incomplete transactions</a>
+
+        <h4 class="header blue bolder smaller">Payroll</h4>
+    	{{ number_of_proofed_timeentries }} Unpaid Transactions <br/>
+    	<a href="{% url "agencies_payroll_runpayroll" %}">Start payroll run</a>
+
+    	<h4 class="header blue bolder smaller">Invoicing</h4>
+        {{ number_of_paid_timeentries }} Uninvoiced Transactions <br/>
+    	<a href="{% url "agencies_payroll_runinvoicing" %}">Start invoicing run</a>
+
+
+    </div>
+    </div>
+{% endblock %}

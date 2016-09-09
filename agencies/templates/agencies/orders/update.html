@@ -1,0 +1,243 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Order Details{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Order</li>
+    <li>Details </li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "agencies_orders_list" %}">Order</a>
+    	
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Order #{{identifier}}
+            <i class="icon-double-angle-right"></i>
+            Details
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <a href="{% url 'agencies_orders_backtosearch' %}">Back to Search</a>
+    <p class="text-right">
+        <a href="{% url 'agencies_orders_assignments' identifier %}" class="btn btn-xs btn-success">Assignments</a>        
+        <a href="#" data-id="{{ identifier }}" id="order-delete-confirm-{{ identifier }}" class="btn btn-xs btn-danger">Delete</a>
+    </p>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if order_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                    {{order_form.errors}}
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-customer">
+                                <i class="green icon-edit bigger-125"></i>
+                                Customer Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-financial">
+                                <i class="green icon-edit bigger-125"></i>
+                                Financial Details
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-job">
+                                <i class="green icon-edit bigger-125"></i>
+                                Job Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-other">
+                                <i class="green icon-edit bigger-125"></i>
+                                Other Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#edit-interest-code">
+                                <i class="purple icon-tags bigger-125"></i>
+                                Interest Codes
+                            </a>
+                        </li>                   
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Customer Information #}
+
+                        <div id="edit-customer" class="tab-pane active">
+                            <h4 class="header blue bolder smaller">Customer Information</h4>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-3 control-label no-padding-right">Customer </label>
+                                <label class="col-xs-12 col-sm-5">{{ customer }}</label>
+                            </div>                            
+                            {% include "tempsurge/forms/field.html" with field=order_form.customerdepartment %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.directions %}
+                            
+                        </div>
+
+                        {# Financial Information #}
+
+                        <div id="edit-financial" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Financial Details</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=order_form.pay_rate %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.bill_rate %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.ot_pay %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.overtime_bill %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.dt_pay %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.doubletime_bill %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.overtime_plan %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.ot_factor %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.multiplier %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.pay_periods %}
+                            
+                        </div>
+
+                        {# Job Information #}
+
+                        <div id="edit-job" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Job Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=order_form.capacity_required %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.capacity_assigned %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.order_type %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.job_title %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.description %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.dress_code %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.safety_notes %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.duration %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.start_date %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.end_date %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.shift %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.start_time %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.end_time %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.shift_notes %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_sunday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_monday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_tuesday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_wednesday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_thursday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_friday %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.workday_saturday %}
+                            
+                        </div>
+
+                        {# Other Information #}
+
+                        <div id="edit-other" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Other Information</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=order_form.active %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.status %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.rep %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.branch %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.overtime_plan %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.do_not_auto_close %}
+                            {% include "tempsurge/forms/field.html" with field=order_form.notes %}                            
+                            
+                        </div>
+
+                        {# Interest Codes #}
+
+                        <div id="edit-interest-code" class="tab-pane">
+                            <h4 class="header blue bolder smaller">Interest Codes</h4>
+
+                            {% include "tempsurge/forms/field.html" with field=order_form.interest_codes %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        $('#id_interest_codes').chosen({});
+
+        hash = window.location.hash.substring(1);
+        if(hash!=""){
+            $('.nav-tabs li').removeClass('active');
+            $('.nav-tabs li a[href=#'+hash+']').parent().addClass('active');
+            $('div.tab-pane').removeClass('active');
+            $('#'+hash).addClass('active');
+        }
+
+        jQuery(function ($) {
+            $("a[id^='order-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var order_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this order?", function (result) {
+                    if (result) {
+                        window.location = '/agencies/orders/delete/' + order_id
+                    }
+                });
+
+                return false;
+            });
+        });
+
+    </script>
+{% endblock %}

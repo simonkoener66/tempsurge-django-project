@@ -1,0 +1,28 @@
+{% comment %}
+{% extends "tempsurge/portal_base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}Tempsurge{% endblock %}
+
+{% block head %}
+    <link href="{% static "tempsurge/css/signin.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row" style="margin-bottom: 6em">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <a href="{% url "accounts.views.sign_in" %}" class="btn btn-info">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md4-offset-4 vcenter">
+            <div class="text-center">
+                <img src="{% static "tempsurge/img/logo.png" %}" class="img-rounded" alt="">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% endcomment %}

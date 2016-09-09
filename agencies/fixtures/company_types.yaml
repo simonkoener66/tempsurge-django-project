@@ -1,0 +1,24 @@
+- model: agencies.CompanyType
+  pk: 1
+  fields:
+    name: Authority
+    description: Tax Pay Authority
+    agency: 1
+- model: agencies.CompanyType
+  pk: 2
+  fields:
+    name: Staffing
+    description: Staffing Company
+    agency: 1
+- model: agencies.CompanyType
+  pk: 3
+  fields:
+    name: Vendor
+    description: Vendor
+    agency: 1
+- model: agencies.CompanyType
+  pk: 4
+  fields:
+    name: WorkerComp
+    description: Worker Comp Vendor
+    agency: 1

@@ -1,0 +1,189 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Customer Billing Setup{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Customer</li>
+    <li class="active">Billing Setup</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "agencies_customers_list" %}">Customer</a>    	
+        
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Customer #{{identifier}}
+            <i class="icon-double-angle-right"></i>
+            Billing Setup
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <a href="{% url 'agencies_customers_backtosearch' %}">Back to Search</a>
+    <p class="text-right">
+        <a href="{% url 'agencies_customers_update' identifier %}" class="btn btn-xs btn-success">Details</a>
+        <a href="{% url 'agencies_customers_creditpayroll' identifier %}" class="btn btn-xs btn-success">Credit and Payroll</a>
+        <a href="{% url 'agencies_customers_misc' identifier %}" class="btn btn-xs btn-success">Misc</a>
+        <a href="#" data-id="{{ identifier }}" id="customer-delete-confirm-{{ identifier }}" class="btn btn-xs btn-danger">Delete</a>
+    </p>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if billing_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-billingschedule">
+                                <i class="green icon-edit bigger-125"></i>
+                                Billing Schedule
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-invoicing">
+                                <i class="green icon-edit bigger-125"></i>
+                                Invoicing
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-separate">
+                                <i class="green icon-edit bigger-125"></i>
+                                Create Separate Invoices for Each
+                            </a>
+                        </li>         
+                    </ul>
+
+                    <div style="display: none;">
+                    	{% include "tempsurge/forms/field.html" with field=billing_form.user %}
+                   	</div>
+                   	
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Billing Schedule #}
+
+                        <div id="edit-billingschedule" class="tab-pane active">
+                        	
+                            {% include "tempsurge/forms/field.html" with field=billing_form.bill_frequency %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.bill_on %}
+
+                        </div>
+
+                        {# Invoicing #}
+
+                        <div id="edit-invoicing" class="tab-pane">
+                            
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_style %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_count %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_method %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_emailtemplate %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_currency %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_handling %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_max %}
+                        	{% include "tempsurge/forms/field.html" with field=billing_form.invoice_notes %}
+
+                        </div>
+
+                        {# Create Separates Invoices For Each #}
+
+                        <div id="edit-separate" class="tab-pane">
+
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_department %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_branch %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_order %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_worksite %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_assignment %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_supervisor %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_employeeid %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_jobtitle %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_weekend %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_subentity %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_costcenter %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_division %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_po %}
+                            {% include "tempsurge/forms/field.html" with field=billing_form.separate_departmentaddress %}
+
+                        </div>
+
+                        
+
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+    
+    <script type="text/javascript">
+        
+        jQuery(function ($) {
+            $("a[id^='customer-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var customer_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this customer?", function (result) {
+                    if (result) {
+                        window.location = '/agencies/customers/delete/' + customer_id
+                    }
+                });
+
+                return false;
+            });
+        });
+
+    </script>
+{% endblock %}

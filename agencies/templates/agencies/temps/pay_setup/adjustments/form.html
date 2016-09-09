@@ -1,0 +1,96 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+{% load form %}
+
+{% block title %}Tempsurge - {% if not identifier %}Create{% else %}Update{% endif %} Pay Adjustments{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li>Pay Setup</li>
+    <li>Adjustments</li>
+    <li class="active">{% if not identifier %}Create{% else %}Update{% endif %}</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <li class="icon-double-angle-right"></li>
+            {{ user.first_name }} {{ user.last_name }}
+            <i class="icon-double-angle-right"></i>
+            Pay Setup
+            <i class="icon-double-angle-right"></i>
+            Adjustments
+            <i class="icon-double-angle-right"></i>
+            {% if not identifier %}Create{% else %}Update{% endif %}
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if form.errors %}
+                {% include "tempsurge/forms/errors.html" %}
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="modal-content">
+                    <div class="modal-header" data-target="#modal-step-contents">
+                        <ul class="wizard-steps">
+                            <li data-target="#modal-step1" class="active">
+                                <span class="step">1</span>
+                                <span class="title">Create Adjustment</span>
+                            </li>
+
+                            <li data-target="#modal-step2"> {# class="complete" #}
+                                <span class="step">2</span>
+                                <span class="title">Add Rules</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-body step-content" id="modal-step-contents">
+                        <h3 class="lighter block green">Create Adjustment</h3>
+
+                        {% crispy form %}
+                    </div>
+
+
+                    <div class="modal-footer wizard-actions">
+                        <a href="{% url 'agencies_temps_pay_setup_adjustments_list' user.id %}" class="btn btn-sm btn-prev disabled">
+                            <i class="icon-arrow-left"></i>
+                            Prev
+                        </a>
+
+                        <button type="submit" class="btn btn-success btn-sm btn-next">
+                            Next
+                            <i class="icon-arrow-right icon-on-right"></i>
+                        </button>
+
+                        <a href="{% url 'agencies_temps_pay_setup_adjustments_list' user.id %}" class="btn btn-danger btn-sm pull-left">
+                            <i class="icon-remove"></i>
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script src="{% static "vendor/ace/js/fuelux/fuelux.wizard.min.js" %}"></script>
+{% endblock %}

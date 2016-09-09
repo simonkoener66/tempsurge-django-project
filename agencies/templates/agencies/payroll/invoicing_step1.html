@@ -1,0 +1,118 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Invoicing Run{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Invoicing Run</li>    
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Invoicing Run
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+    
+    <div class="col-xs-12">
+
+        <p class="text-left">
+            <a href="{% url "agencies_payroll_confirminvoicing" %}" class="btn btn-xs btn-info">
+                Run Invoicing
+            </a>
+        </p>        
+        {{count}} Uninvoiced Transactions
+
+    </div>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>                    
+                    <th>Transaction ID</th>
+                    <th>Assignment</th>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Department</th>
+                    <th>Employee</th>
+                    <th>Job Title</th>
+                    <th>WE Date</th>
+                    <th>Bill Rate</th>
+                    <th>Pay Rate</th>
+                    <th>Hours</th>                    
+                    <th>Status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for transaction in paid_timeentries %}
+                    <tr class="selected">                       
+                        <td><a href="{% url "agencies_timeentries_detail" transaction.id %}">{{ transaction.id }}</a></td>
+                        <td><a href="{% url "agencies_assignments_update" transaction.assignment.order.id transaction.assignment.id %}"># {{ transaction.assignment.id }}</a></td>
+                        <td><a href="{% url "agencies_orders_update" transaction.assignment.order.id %}"># {{ transaction.assignment.order.id }}</a></td>
+                        <td><a href="{% url "agencies_customers_update" transaction.assignment.order.customerdepartment.customer.id %}">{{ transaction.assignment.order.customerdepartment.customer.customername }}</a></td>
+                        <td>{{ transaction.assignment.order.customerdepartment.depname }}</td>
+                        <td><a href="{% url "agencies_temps_show" transaction.assignment.employee.user.id %}">{{ transaction.assignment.employee }}</a></td>
+                        <td>{{ transaction.assignment.job_title }}</td>
+                        <td>{{ transaction.we_date }}</td>
+                        <td>{{ transaction.bill_rate }}</td>
+                        <td>{{ transaction.pay_rate }}</td>
+                        <td>{{ transaction.hours_regular}}</td>
+                        <td>{{ transaction.status }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="14">
+                            <div class="text-center"><h5>There are no uninvoiced transactions</h5></div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if transactions %}
+                <ul class="pager">
+                    {% if transactions.has_previous %}
+                        <li class="previous">
+                            <a href="{{ query_string }}page={{ transactions.previous_page_number }}">← Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="">
+                        <a>Page {{ transactions.number }} of {{ transactions.paginator.num_pages }}</a>
+                    </li>
+
+                    {% if transactions.has_next %}
+                        <li class="next">
+                            <a href="{{ query_string }}page={{ transactions.next_page_number }}">Next →</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /span -->
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - New Customer{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Customer</li>
+    <li class="active">New</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "agencies_customers_list" %}">Customer</a>  	
+        <small>
+            <i class="icon-double-angle-right"></i>
+            New
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    
+    <div class="row">
+        <div class="col-xs-12">
+            {% if user_form.errors or profile_form.errors or customer_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-personal">
+                                <i class="green icon-edit bigger-125"></i>
+                                New Customer
+                            </a>
+                        </li>
+
+                        
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Add New Customer Information #}
+
+                        <div id="edit-personal" class="tab-pane active">
+                            <div style="display: none;">
+                            {% include "tempsurge/forms/field.html" with field=user_form.first_name %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.last_name %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.username %}
+                            </div>
+                            <h4 class="header blue bolder smaller">Customer Name</h4>
+                            {% include "tempsurge/forms/field.html" with field=customer_form.customername %}
+                            {% include "tempsurge/forms/field.html" with field=customer_form.customerdept %}
+
+                            <h4 class="header blue bolder smaller">Main Address</h4>
+                            {% include "tempsurge/forms/field.html" with field=customer_form.attnto %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.address_line_1 %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.address_line_2 %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.city %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.state %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.zip %}
+                            {% include "tempsurge/forms/field.html" with field=profile_form.country %}
+
+                            <h4 class="header blue bolder smaller">Other Billing</h4>
+                            {% include "tempsurge/forms/field.html" with field=profile_form.phone %}
+                            {% include "tempsurge/forms/field.html" with field=user_form.email %}
+
+                            <h4 class="header blue bolder smaller">Sales Information</h4>
+                            {% include "tempsurge/forms/field.html" with field=customer_form.accountmanager %}
+                            {% include "tempsurge/forms/field.html" with field=customer_form.branch %}
+                            {% include "tempsurge/forms/field.html" with field=customer_form.note %}
+
+                        </div>
+
+                        
+
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        
+    </script>
+{% endblock %}

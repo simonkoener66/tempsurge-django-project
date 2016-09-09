@@ -1,0 +1,75 @@
+{% extends "accounts/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge Password Recovery{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+
+    <li class="active">Password Recovery</li>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div id="forgot-box" class="forgot-box
+     no-border">
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4 class="header red lighter bigger">
+                    <i class="icon-key"></i>
+                    Retrieve Password
+                </h4>
+
+                <div class="space-6"></div>
+                <p>
+                    Please enter your email address.
+                </p>
+
+                {% if form.errors or invalid_credentials %}
+                    <div class="alert alert-danger">
+                        Invalid Email.
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{{ request.get_full_path }}" class="form-horizontal" role="form">{% csrf_token %}
+                    <fieldset>
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="email" name="email" id="id_email" class="form-control" placeholder="Email"/>
+                                <i class="icon-envelope"></i>
+                            </span>
+                        </label>
+
+                        <div class="clearfix">
+                            <button type="submit" class="width-35 pull-right btn btn-sm btn-danger">
+                                <i class="icon-lightbulb"></i>
+                                Send
+                            </button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <!-- /widget-main -->
+
+            <div class="toolbar center">
+                <a href="{% url "accounts.views.sign_in" %}" class="back-to-login-link">
+                    Back to login
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <!-- /widget-body -->
+    </div><!-- /forgot-box -->
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+        $(function () {
+            $("#id_email").focus();
+        });
+    </script>
+{% endblock %}

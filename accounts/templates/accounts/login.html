@@ -1,0 +1,113 @@
+{% extends "accounts/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge Login{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div id="login-box" class="login-box visible widget-box no-border">
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4 class="header blue lighter bigger">
+                    <i class="icon-coffee green"></i>
+                    Please Enter Your Credentials
+                </h4>
+
+                <div class="space-6"></div>
+
+                {% if form.errors or invalid_credentials %}
+                    <div class="alert alert-danger">
+                        Invalid username or password. Please try again.
+                    </div>
+                {% endif %}
+
+                <form action="{{ request.get_full_path }}" method="post" class="form-horizontal" role="form">{% csrf_token %}
+                    <fieldset>
+                        <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    <input name="username" type="text" id="id_username" class="form-control" placeholder="Username"/>
+                                    <i class="icon-user"></i>
+                                </span>
+                        </label>
+
+                        <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    <input name="password" type="password" class="form-control" placeholder="Password"/>
+                                    <i class="icon-lock"></i>
+                                </span>
+                        </label>
+
+                        <div class="space"></div>
+
+                        <div class="clearfix">
+                            <label class="inline">
+                                <input type="checkbox" class="ace"/>
+                                <span class="lbl"> Remember Me</span>
+                            </label>
+
+                            <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+                                <i class="icon-key"></i>
+                                Login
+                            </button>
+                        </div>
+
+                        <div class="space-4"></div>
+                    </fieldset>
+                </form>
+
+                {% comment %}
+                <div class="social-or-login center">
+                    <span class="bigger-110">Or Login Using</span>
+                </div>
+
+                <div class="social-login center">
+                    <a class="btn btn-primary">
+                        <i class="icon-facebook"></i>
+                    </a>
+
+                    <a class="btn btn-info">
+                        <i class="icon-twitter"></i>
+                    </a>
+
+                    <a class="btn btn-danger">
+                        <i class="icon-google-plus"></i>
+                    </a>
+                </div>
+                {% endcomment %}
+            </div>
+            <!-- /widget-main -->
+
+            <div class="toolbar clearfix">
+                <div>
+                    <a href="{% url "accounts.views.recover" %}" class="forgot-password-link">
+                        <i class="icon-arrow-left"></i>
+                        I forgot my password
+                    </a>
+                </div>
+
+                {% comment %}
+                <div>
+                    <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
+                        I want to register
+                        <i class="icon-arrow-right"></i>
+                    </a>
+                </div>
+                {% endcomment %}
+            </div>
+        </div>
+        <!-- /widget-body -->
+    </div>
+    <!-- /login-box -->
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+        $(function () {
+            $("#id_username").focus();
+        });
+    </script>
+{% endblock %}

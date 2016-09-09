@@ -1,0 +1,192 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Customer Credit and Payroll{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Customer</li>
+    <li class="active">Credit and Payroll</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "agencies_customers_list" %}">Customer</a>    	
+        
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Customer #{{identifier}}
+            <i class="icon-double-angle-right"></i>
+            Credit and Payroll
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <a href="{% url 'agencies_customers_backtosearch' %}">Back to Search</a>
+    <p class="text-right">
+        <a href="{% url 'agencies_customers_update' identifier %}" class="btn btn-xs btn-success">Details</a>
+        <a href="{% url 'agencies_customers_billingsetup' identifier %}" class="btn btn-xs btn-success">Billing Setup</a>
+        <a href="{% url 'agencies_customers_misc' identifier %}" class="btn btn-xs btn-success">Misc</a>
+        <a href="#" data-id="{{ identifier }}" id="customer-delete-confirm-{{ identifier }}" class="btn btn-xs btn-danger">Delete</a>
+    </p>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if creditpayroll_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-credit">
+                                <i class="green icon-edit bigger-125"></i>
+                                Credit Information
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-payroll">
+                                <i class="green icon-edit bigger-125"></i>
+                                Additional Payroll Details
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#edit-financial">
+                                <i class="green icon-edit bigger-125"></i>
+                                Financial Information
+                            </a>
+                        </li>         
+                    </ul>
+
+                    <div style="display: none;">
+                    	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.user %}
+                   	</div>
+                   	
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Credit Information #}
+
+                        <div id="edit-credit" class="tab-pane active">
+                        	
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.credit_limit %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.credit_analyst %}
+                            <br/><br/>
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.hold_code %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.terms %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.last_checked %}
+                            <br/><br/>
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.customer_type %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.credit_note %}
+
+                        </div>
+
+                        {# Additional Payroll Details #}
+
+                        <div id="edit-payroll" class="tab-pane">
+                            
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.worker_comp %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.check_delivery %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.overtime_plan %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.pay_periods %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.weekendson %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.pay_cycle %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.mileage_rate %}
+                        	{% include "tempsurge/forms/field.html" with field=creditpayroll_form.payroll_note %}
+
+                        </div>
+
+                        {# Financial Information #}
+
+                        <div id="edit-financial" class="tab-pane">
+
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_balance %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_current %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_1_30_days %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_31_60_days %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_61_90_days %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.ar_over90_days %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.dso %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.sales_tyd %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.sales_last12mo %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.lifetime_sales %}
+                            {% include "tempsurge/forms/field.html" with field=creditpayroll_form.volume_discount %}
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Save
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        
+        jQuery(function ($) {
+            $("a[id^='customer-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var customer_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this customer?", function (result) {
+                    if (result) {
+                        window.location = '/agencies/customers/delete/' + customer_id
+                    }
+                });
+
+                return false;
+            });
+        });
+
+    </script>
+{% endblock %}

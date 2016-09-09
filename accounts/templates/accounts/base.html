@@ -1,0 +1,120 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}TempSurge{% endblock %}</title>
+
+    <meta name="description" content="User login page"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="shortcut icon" href="{% static "tempsurge/img/favicon.png" %}">
+
+    <!-- basic styles -->
+
+    <link href="{% static "vendor/ace/css/bootstrap.min.css" %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "vendor/ace/css/font-awesome.min.css" %}"/>
+
+    <!--[if IE 7]>
+		  <link rel="stylesheet" href="{% static "vendor/ace/css/font-awesome-ie7.min.css" %}" />
+		<![endif]-->
+
+    <!-- page specific plugin styles -->
+
+    <!-- fonts -->
+
+    <link rel="stylesheet" href="{% static "vendor/ace/css/ace-fonts.css" %}"/>
+
+    <!-- ace styles -->
+
+    <link rel="stylesheet" href="{% static "vendor/ace/css/ace.min.css" %}"/>
+    <link rel="stylesheet" href="{% static "vendor/ace/css/ace-rtl.min.css" %}"/>
+
+    <!--[if lte IE 8]>
+		  <link rel="stylesheet" href="{% static "vendor/ace/css/ace-ie.min.css" %}" />
+		<![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+		<script src="{% static "vendor/ace/js/html5shiv.js" %}"></script>
+		<script src="{% static "vendor/ace/js/respond.min.js" %}"></script>
+		<![endif]-->
+
+    {% block head %}{% endblock %}
+</head>
+
+<body class="login-layout">
+
+<div class="main-container">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-container">
+                    <div class="center">
+                        {% comment %}
+                        <h1>
+                            <i class="icon-leaf green"></i>
+                            <span class="white">Temp</span><span class="red">Surge</span>
+                        </h1>
+                        <h4 class="blue">{# &copy; Company Name #}</h4>
+                        {% endcomment %}
+                        <img src="{% static "tempsurge/img/login-logo.png" %}" style="padding-top: 3em" alt="TempSurge"/>
+                    </div>
+
+                    <div class="space-6"></div>
+
+                    <div class="position-relative">
+                        {% block content %}{% endblock %}
+                    </div>
+                    <!-- /position-relative -->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</div>
+<!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='{% static "vendor/ace/js/jquery-2.0.3.min.js" %}'>" + "<" + "/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='% static "vendor/ace/js/jquery-1.10.2.min.js" %}'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='{% static "vendor/ace/js/jquery.mobile.custom.min.js" %}'>" + "<" + "/script>");
+</script>
+
+{% block foot %}{% endblock %}
+
+</body>
+</html>
+
+
+{% comment %}
+{% block title %}Tempsurge Accounts{% endblock %}
+
+{% block head %}
+    <link href="{% static "accounts/stylesheets/screen.css" %}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+{% endblock %}
+{% endcomment %}

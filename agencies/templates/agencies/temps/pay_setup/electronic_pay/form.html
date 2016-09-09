@@ -1,0 +1,137 @@
+{% extends "agencies/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Employee Electronic Pay{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Employees</li>
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li>Pay Setup</li>
+    <li class="active">Electronic Pay</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Employees
+        <small>
+            <li class="icon-double-angle-right"></li>
+            {{ user.first_name }} {{ user.last_name }}
+            <i class="icon-double-angle-right"></i>
+            Pay Setup
+            <i class="icon-double-angle-right"></i>
+            Electronic Pay
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if electronicpay_form.errors or achbankaccount_form.errors or paycardaccount_form.errors %}
+                {% include "tempsurge/forms/errors.html" %}
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="row">
+                    <div class="col-md-2">Activate Electronic Payments:</div>
+                    <div class="col-md-10">
+                        {{ electronicpay_form.activate_electronic_payments }}
+                        {% comment %}
+                        <input id="id_activate_electronic_payments" name="electronic_payment_method"{% if temp.activate_electronic_payments %} checked="checked"{% endif %} type="checkbox" class="ace ace-switch ace-switch-5">
+                        {% endcomment %}
+                        <span class="lbl"></span>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col-md-2">Active Electronic Payment Method:</div>
+                    <div class="col-md-10">
+                        {{ electronicpay_form.electronic_payment_method }}
+                    </div>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="smaller">
+                                    ACH Bank Account
+                                    {# <small>(CLick to activate)</small> #}
+                                </h4>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="muted">
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.bank_routing_info %}
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.account_number %}
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.account_type %}
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.pre_note_sent %}
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.pre_note_approved %}
+                                        {% include "tempsurge/forms/field.html" with field=achbankaccount_form.pre_note_disapproved %}
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="smaller">
+                                    PayCard Account
+                                    {# <small>(CLick to activate)</small> #}
+                                </h4>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="muted">
+                                        {% include "tempsurge/forms/field.html" with field=paycardaccount_form.account_number %}
+                                        {% include "tempsurge/forms/field.html" with field=paycardaccount_form.expiry_date %}
+                                        {% include "tempsurge/forms/field.html" with field=paycardaccount_form.paycard_verified_by %}
+                                        {% include "tempsurge/forms/field.html" with field=paycardaccount_form.paycard_verify_date %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% include "tempsurge/forms/submit.html" %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    {{ block.super }}
+
+    {# BlockUI #}
+    <script src="{% static "vendor/js/jquery.blockUI.js" %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if not temp.activate_electronic_payments %}
+                $('.widget-box').block({ message: null, overlayCSS: {'cursor': 'default'}});
+            {% endif %}
+
+            $("#id_activate_electronic_payments").change(function () {
+                if (this.checked) {
+                    $('.widget-box').unblock();
+                } else {
+                    $('.widget-box').block({ message: null, overlayCSS: {'cursor': 'default'}});
+                }
+            });
+        });
+    </script>
+{% endblock %}

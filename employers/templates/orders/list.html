@@ -1,0 +1,189 @@
+{% extends "employers/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Order Listing{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Orders</li>
+    <li class="active">Search</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+        Orders
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Search
+        </small>
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+    <div class="col-xs-12">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.extra_tags == 'order' %}
+                    {% include 'tempsurge/components/alert.html' with connotation='success' message=message %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <p class="text-right">
+            <a href="{% url "employers_orders_create" %}" class="btn btn-sm btn-primary">New Order</a>
+        </p>
+        <div class="well">
+            <form action="{{ request.get_full_path }}" method="get" class="form-inline" role="form">{% csrf_token %}
+                {{ search_form.customer_name }}
+                {{ search_form.order_id }}
+                {{ search_form.status }}
+                {{ search_form.active }}
+                {{ search_form.rep }}
+                {{ search_form.branch }}
+                
+                <button type="submit" class="btn btn-purple btn-sm">
+                    Search
+                    <i class="icon-search icon-on-right bigger-110"></i>
+                </button>
+                <a href="{% url "employers_orders_list" %}" class="btn btn-default btn-sm">
+                    Clear
+                    <i class="icon-remove icon-on-right bigger-110"></i>
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="center">
+                        <label>
+                            <input type="checkbox" class="ace">
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                    <th>Department</th>
+                    <th>Jot Title</th>
+                    <th>Order Type</th>
+                    <th>Order ID</th>
+                    <th>Pay Rate</th>
+                    <th>Bill Rate</th>
+                    <th>Start Date</th>
+                    <th>Order Status</th>
+                    <th>Number Required</th>
+                    <th>Number Assigned</th>
+                    <th>Is Active</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for order in orders %}
+                    <tr class="selected">
+                        <td class="center">
+                            <label>
+                                <input type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+
+                        <td>{{ order.customerdepartment }}</td>
+	                    <td>{{ order.job_title }}</td>
+	                    <td>{{ order.order_type }}</td>
+	                    <td>{{ order.id }}</td>
+	                    <td>{{ order.pay_rate }}</td>
+	                    <td>{{ order.bill_rate }}</td>
+	                    <td>{{ order.start_date }}</td>
+	                    <td>{{ order.status }}</td>
+	                    <td>{{ order.capacity_required }}</td>
+	                    <td>{{ order.capacity_assigned }}</td>
+                        <td>
+                            {% if order.active %}
+                                <span class="label label-sm label-success">Active</span>
+                            {% else %}
+                                <span class="label label-sm label-danger">Inactive</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td>
+                            <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+                                <a href="{% url "employers_orders_detail" order.id %}" class="btn btn-xs btn-success">
+                                    <i class="icon-ok bigger-120"></i>
+                                </a>
+                                <a href="{% url "employers_orders_update" order.id %}" class="btn btn-xs btn-info">
+                                    <i class="icon-edit bigger-120"></i>
+                                </a>
+                                <a href="#" data-id="{{ order.id }}" id="big-delete-confirm-{{ order.id }}" class="btn btn-xs btn-danger">
+                                    <i class="icon-trash bigger-120"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="12">
+                            <div class="text-center"><h5>Your search yielded no results.</h5></div>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if orders %}
+                <ul class="pager">
+                    {% if orders.has_previous %}
+                        <li class="previous">
+                            <a href="{{ query_string }}page={{ orders.previous_page_number }}">← Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="">
+                        <a>Page {{ orders.number }} of {{ orders.paginator.num_pages }}</a>
+                    </li>
+
+                    {% if orders.has_next %}
+                        <li class="next">
+                            <a href="{{ query_string }}page={{ orders.next_page_number }}">Next →</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /span -->
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "accounts/javascripts/app.js" %}"></script>
+
+    <script src="{% static "vendor/ace/js/bootbox.min.js" %}"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("a[id^='big-delete-confirm']").click(function (e) {
+                e.stopImmediatePropagation();
+
+                var order_id = $(this).data("id");
+
+                bootbox.confirm("Are you sure you want to permanently delete this order?", function (result) {
+                    if (result) {
+                        window.location = '/employers/orders/delete/' + order_id
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

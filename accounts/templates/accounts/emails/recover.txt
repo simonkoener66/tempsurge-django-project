@@ -1,0 +1,11 @@
+{% load i18n %}
+{% trans "Dear Sir or Madam," %}
+
+{% trans "To reset your password, please go to the following page:" %}
+
+{{ password_reset_url }}
+
+{% trans "If you do not wish to reset your password, ignore this message. It will expire in 24 hours." %}
+
+{% trans "Kind regards," %}
+{% trans "TempSurge Team" %}

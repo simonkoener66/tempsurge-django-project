@@ -1,0 +1,110 @@
+{% extends "employers/base.html" %}
+{% load static from staticfiles %}
+{% load form %}
+
+{% block title %}Tempsurge - Create Order{% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/">Home</a>
+    </li>
+    <li>Orders</li>
+    <li class="active">Create</li>
+{% endblock %}
+
+{% block pageheader %}
+    <h1>
+    	<a href="{% url "employers_orders_list" %}">Orders</a>
+    	
+        <small>
+            <i class="icon-double-angle-right"></i>
+            New Order
+        </small>
+    </h1>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "vendor/ace/css/chosen.min.css" %}"/>
+
+    <style>
+        #id_interest_codes_chosen {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if order_form.errors or profile_form.errors or temp_form.errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+
+                    <strong>
+                        <i class="icon-remove"></i>
+                        Error!
+                    </strong>
+
+                    Please check the highlighted fields.
+                    <br>
+                </div>
+            {% endif %}
+
+            <form action="{{ request.get_full_path }}" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">{% csrf_token %}
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-16">
+                        <li class="active">
+                            <a data-toggle="tab" href="#edit-order">
+                                <i class="green icon-edit bigger-125"></i>
+                                Order Information
+                            </a>
+                        </li>                        
+                    </ul>
+
+                    <div class="tab-content profile-edit-tab-content">
+
+                        {# Order Information #}
+
+                        <div id="edit-order" class="tab-pane active">
+
+                            {% include "tempsurge/forms/field.html" with field=order_form.customerdepartment %} 
+                            {% include "tempsurge/forms/field.html" with field=order_form.order_type %} 
+                                                       
+                            
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            Create
+                        </button>
+
+                        &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <script src="{% static "vendor/ace/js/chosen.jquery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        $('#id_interest_codes').chosen({});
+    </script>
+{% endblock %}
